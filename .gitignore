@@ -1,0 +1,27 @@
+# Dependencias
+node_modules/
+package-lock.json
+yarn.lock
+
+# Caché y compilación
+android/.gradle/
+android/app/build/
+ios/Pods/
+ios/build/
+.expo/
+.expo-shared/
+dist/
+.cache/
+
+# Archivos de sistema
+.DS_Store
+.env
+*.log
+*.swp
+.vscode/
+.idea/
+
+# Otros
+yarn-error.log
+npm-debug.log
+
