@@ -2,6 +2,8 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+The developed application makes use of the Inditex API to display garments similar to the uploaded image. We use as technology “react native” and “typescript” and a windowed design. 
+
 ## Get started
 
 1. Install dependencies
@@ -16,6 +18,23 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
     npx expo start
    ```
 
+  ```bash
+HackUdc
+├── android
+├── app
+├── app.json
+├── assets
+├── components
+├── constants
+├── hooks
+├── inditexApi.js
+├── package.json
+├── README.md
+├── scripts
+├── tsconfig.json
+└── visual-search.js
+
+```
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
