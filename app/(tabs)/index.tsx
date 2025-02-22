@@ -9,10 +9,12 @@ export default function LoginScreen() {
 
   const handleLogin = () => {
     if (firstName === '' || lastName === '') {
-      Alert.alert('Errore', 'Inserisci nome e cognome');
+      Alert.alert('Error', 'Por favor introduzca su nombre y apellidos.');
     } else {
-      Alert.alert('Login effettuato', `Benvenuto, ${firstName} ${lastName}`);
-      router.push(`/welcome?firstName=${firstName}&lastName=${lastName}`);
+      router.push({
+        pathname: "/welcome",
+        params: { firstName, lastName }
+      });
     }
   };
 
@@ -22,20 +24,20 @@ export default function LoginScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Nome"
+        placeholder="Nombre"
         value={firstName}
         onChangeText={setFirstName}
       />
 
       <TextInput
         style={styles.input}
-        placeholder="Cognome"
+        placeholder="Apellidos"
         value={lastName}
         onChangeText={setLastName}
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Accedi</Text>
+        <Text style={styles.buttonText}>Acceder</Text>
       </TouchableOpacity>
     </View>
   );
