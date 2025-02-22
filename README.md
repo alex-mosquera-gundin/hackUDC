@@ -18,23 +18,23 @@ The developed application makes use of the Inditex API to display garments simil
     npx expo start
    ```
 
+This is the project structure
   ```bash
-HackUdc
-├── android
-├── app
-├── app.json
-├── assets
-├── components
-├── constants
-├── hooks
-├── inditexApi.js
-├── package.json
-├── README.md
-├── scripts
-├── tsconfig.json
-└── visual-search.js
-
-```
+   HackUdc
+   ├── android (native android code)
+   ├── app (main code of the aplication)
+   ├── app.json
+   ├── assets
+   ├── components (reusable components)
+   ├── constants (global variables)
+   ├── hooks (hooks made by us)
+   ├── inditexApi.js
+   ├── package.json
+   ├── README.md
+   ├── scripts (automated scripts)
+   ├── tsconfig.json
+   └── visual-search.js
+   ```
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
