@@ -12,8 +12,11 @@ export default function LoginScreen() {
       Alert.alert('Errore', 'Inserisci nome e cognome');
     } else {
       Alert.alert('Login effettuato', `Benvenuto, ${firstName} ${lastName}`);
-      // ✅ Dopo il login vai alle tabs
-      router.replace('/(tabs)');
+
+      router.push({
+        pathname: '/welcome',
+        params: { firstName, lastName },
+      });
     }
   };
 

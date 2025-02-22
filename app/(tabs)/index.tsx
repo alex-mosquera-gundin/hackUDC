@@ -12,7 +12,6 @@ export default function LoginScreen() {
       Alert.alert('Errore', 'Inserisci nome e cognome');
     } else {
       Alert.alert('Login effettuato', `Benvenuto, ${firstName} ${lastName}`);
-      // ✅ Passiamo nome e cognome alla schermata Home
       router.replace(`/tabs/index?firstName=${firstName}&lastName=${lastName}`);
     }
   };

@@ -8,7 +8,6 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-// Evita la chiusura della splash screen prima del caricamento
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -27,17 +26,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack initialRouteName="login"> {/* 👈 Login come schermata iniziale */}
-        {/* Schermata Login */}
+      <Stack initialRouteName="login">
         <Stack.Screen name="login" options={{ headerShown: false }} />
-
-        {/* Tabs principali DOPO il login */}
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-
-        {/* Schermata per rotte non trovate */}
+        <Stack.Screen name="welcome" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" options={{ title: 'Oops!' }} />
       </Stack>
-
       <StatusBar style="auto" />
     </ThemeProvider>
   );
