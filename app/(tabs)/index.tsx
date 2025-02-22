@@ -12,7 +12,7 @@ export default function LoginScreen() {
       Alert.alert('Errore', 'Inserisci nome e cognome');
     } else {
       Alert.alert('Login effettuato', `Benvenuto, ${firstName} ${lastName}`);
-      router.replace(`/tabs/index?firstName=${firstName}&lastName=${lastName}`);
+      router.push(`/welcome?firstName=${firstName}&lastName=${lastName}`);
     }
   };
 
