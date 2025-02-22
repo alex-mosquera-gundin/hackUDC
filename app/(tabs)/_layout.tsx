@@ -6,7 +6,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
       }}
     >
       <Tabs.Screen
@@ -16,12 +16,22 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
-          tabBarStyle: undefined,
         }}
       />
 
       <Tabs.Screen
         name="explore"
+        options={{
+          title: 'Explorar',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="search-outline" size={size} color={color} />
+          ),
+          tabBarStyle: { height: 60 },
+        }}
+      />
+
+      <Tabs.Screen
+        name="recommendation"
         options={{
           title: 'Explorar',
           tabBarIcon: ({ color, size }) => (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Modal, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
@@ -36,9 +36,24 @@ export default function UploadScreen() {
 
   const confirmUpload = () => {
     if (image) {
-      alert("Imagen subida correctamente");
+      Alert.alert(
+        "Imagen subida correctamente",
+        "La imagen ha sido cargada con éxito.",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              router.push({
+                pathname: '/recommendation',
+                params: { imageUri: image, itemsCount: 8 },
+              });
+            }
+          }
+        ],
+        { cancelable: false }
+      );
     } else {
-      alert("No hay imagen para subir");
+      Alert.alert("Error", "No hay imagen para subir");
     }
   };
 
