@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, Modal, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { searchVisual } from '../scripts/inditexApi';
+
 
 export default function UploadScreen() {
   const { firstName, lastName } = useLocalSearchParams();
@@ -9,6 +11,43 @@ export default function UploadScreen() {
   const [menuVisible, setMenuVisible] = useState(false);
   const router = useRouter();
 
+  // ✅ Scegli tra Fotocamera o Galleria
+  const selectImageOption = () => {
+    Alert.alert(
+      "Seleziona immagine",
+      "Vuoi scattare una foto o caricarne una dalla galleria?",
+      [
+        {
+          text: "Fotocamera",
+          onPress: () => takePhoto(),
+        },
+        {
+          text: "Galleria",
+          onPress: () => pickImage(),
+        },
+        {
+          text: "Annulla",
+          style: "cancel",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  // 📷 Fotocamera
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  // 🖼️ Galleria
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -22,41 +61,32 @@ export default function UploadScreen() {
     }
   };
 
-  const takePhoto = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  const confirmUpload = () => {
+  // 📡 Carica immagine e vai alla pagina di raccomandazione
+  const confirmUpload = async () => {
     if (image) {
-      Alert.alert(
-        "Imagen subida correctamente",
-        "La imagen ha sido cargada con éxito.",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              router.push({
-                pathname: '/recommendation',
-                params: { imageUri: image, itemsCount: 8 },
-              });
-            }
-          }
-        ],
-        { cancelable: false }
-      );
+      try {
+        Alert.alert("Caricamento", "Sto cercando i prodotti...");
+
+        // Simulazione chiamata API
+        const recommendedItems = []; // Qui integrerai la tua API in futuro
+
+        router.push({
+          pathname: '/recommendation',
+          params: {
+            imageUri: image,
+            recommendations: JSON.stringify(recommendedItems),
+          },
+        });
+      } catch (error) {
+        Alert.alert("Errore", "Qualcosa è andato storto durante la ricerca visiva.");
+        console.error("Errore API:", error);
+      }
     } else {
-      Alert.alert("Error", "No hay imagen para subir");
+      Alert.alert("Errore", "Nessuna immagine selezionata.");
     }
   };
 
+  // 🔒 Logout
   const handleLogout = () => {
     setMenuVisible(false);
     router.push('/');
@@ -80,7 +110,7 @@ export default function UploadScreen() {
       )}
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={takePhoto}>
+        <TouchableOpacity style={styles.button} onPress={selectImageOption}>
           <Text style={styles.buttonText}>Sacar foto o cargar archivo</Text>
         </TouchableOpacity>
 

@@ -15,11 +15,11 @@ dist/
 
 # Archivos de sistema
 .DS_Store
-.env
 *.log
 *.swp
 .vscode/
 .idea/
+.env
 
 # Otros
 yarn-error.log
