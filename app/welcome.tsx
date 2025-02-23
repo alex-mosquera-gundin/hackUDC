@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, Modal, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { searchVisual } from '../scripts/inditexApi';
-
+import { uploadImageToImgur, searchVisual } from '../inditexApi';
 
 export default function UploadScreen() {
   const { firstName, lastName } = useLocalSearchParams();
@@ -11,30 +10,20 @@ export default function UploadScreen() {
   const [menuVisible, setMenuVisible] = useState(false);
   const router = useRouter();
 
-  // ✅ Scegli tra Fotocamera o Galleria
   const selectImageOption = () => {
     Alert.alert(
-      "Seleziona immagine",
-      "Vuoi scattare una foto o caricarne una dalla galleria?",
+      "Seleccionar la imagen",
+      "¿Quieres tomar una foto o subir una de la galería?",
       [
-        {
-          text: "Fotocamera",
-          onPress: () => takePhoto(),
-        },
-        {
-          text: "Galleria",
-          onPress: () => pickImage(),
-        },
-        {
-          text: "Annulla",
-          style: "cancel",
-        },
+        { text: "Cámara", onPress: () => takePhoto() },
+        { text: "Galería", onPress: () => pickImage() },
+        { text: "Cancela", style: "cancel" },
       ],
       { cancelable: true }
     );
   };
 
-  // 📷 Fotocamera
+  // 📷 Cámara
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -47,7 +36,7 @@ export default function UploadScreen() {
     }
   };
 
-  // 🖼️ Galleria
+  // 🖼️ Galería
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -61,28 +50,32 @@ export default function UploadScreen() {
     }
   };
 
-  // 📡 Carica immagine e vai alla pagina di raccomandazione
   const confirmUpload = async () => {
     if (image) {
       try {
-        Alert.alert("Caricamento", "Sto cercando i prodotti...");
+        Alert.alert("Cargando", "Estoy subiendo la imagen y buscando productos...");
 
-        // Simulazione chiamata API
-        const recommendedItems = []; // Qui integrerai la tua API in futuro
+        const publicImageUrl = await uploadImageToImgur(image);
 
-        router.push({
-          pathname: '/recommendation',
-          params: {
-            imageUri: image,
-            recommendations: JSON.stringify(recommendedItems),
-          },
-        });
+        const response = await searchVisual(publicImageUrl);
+
+        if (response && response.length > 0) {
+          router.push({
+            pathname: '/recommendation',
+            params: {
+              imageUri: publicImageUrl,
+              recommendations: JSON.stringify(response),
+            },
+          });
+        } else {
+          Alert.alert("Sin resultados", "No se han encontrado productos similares.");
+        }
       } catch (error) {
-        Alert.alert("Errore", "Qualcosa è andato storto durante la ricerca visiva.");
-        console.error("Errore API:", error);
+        Alert.alert("Error", "Se ha producido un error durante la búsqueda.");
+        console.error("Error de API:", error);
       }
     } else {
-      Alert.alert("Errore", "Nessuna immagine selezionata.");
+      Alert.alert("Error", "No hay imagen seleccionada.");
     }
   };
 

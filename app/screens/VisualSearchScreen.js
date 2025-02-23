@@ -1,36 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Image, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { visualSearch } from '../../inditexApi';
+import { View, Text, Button, Image, StyleSheet, ActivityIndicator, ScrollView, Linking } from 'react-native';
+import { searchVisual } from '../api_service';
 
 export default function VisualSearchScreen() {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [searchResults, setSearchResults] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // Funzione per selezionare l'immagine dalla galleria
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-    }
-  };
-
-  // Funzione per eseguire la ricerca visiva
   const handleSearch = async () => {
-    if (!selectedImage) return alert("Seleziona un'immagine prima di continuare!");
-
     setLoading(true);
+    setError('');
+    setProducts([]);
+
     try {
-      const data = await visualSearch(selectedImage);
-      setSearchResults(data.results || []);
-    } catch (error) {
-      alert("Errore nella ricerca visiva. Riprova.");
+      const imageUrl = 'https://i.imgur.com/example.jpg';
+
+      const response = await searchVisual(imageUrl);
+
+      console.log('📊 respuesta JSON:', JSON.stringify(response, null, 2));
+
+      if (response && response.length > 0) {
+        setProducts(response);
+      } else {
+        setError('No hay productos.');
+      }
+    } catch (err) {
+      console.error('❌ Error durante la búsqueda:', err);
+      setError('Error durante la búsqueda.');
     } finally {
       setLoading(false);
     }
@@ -38,44 +34,47 @@ export default function VisualSearchScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ricerca Visiva</Text>
+      <Text style={styles.title}>Visual Search</Text>
 
-      {/* 📸 Selezione immagine */}
-      <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
-        {selectedImage ? (
-          <Image source={{ uri: selectedImage }} style={styles.selectedImage} />
-        ) : (
-          <Text>Seleziona un'immagine</Text>
-        )}
-      </TouchableOpacity>
+      <Button title="Buscar producto" onPress={handleSearch} />
 
-      <Button title="Cerca Prodotti" onPress={handleSearch} />
+      {loading && <ActivityIndicator size="large" color="#007BFF" style={{ marginTop: 20 }} />}
 
-      {/* 🔄 Loading */}
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      {error !== '' && <Text style={styles.error}>{error}</Text>}
 
-      {/* 📋 Lista risultati */}
-      <FlatList
-        data={searchResults}
-        keyExtractor={(item) => item.product_id}
-        renderItem={({ item }) => (
-          <View style={styles.resultItem}>
-            <Image source={{ uri: item.image_url }} style={styles.productImage} />
-            <Text>{item.name}</Text>
-            <Text>{item.price}€</Text>
-            <Text>{item.availability}</Text>
+      {/* ✅ Mostra i prodotti trovati */}
+      <ScrollView style={styles.scrollView}>
+        {products.map((product, index) => (
+          <View key={index} style={styles.result}>
+            <Image source={{ uri: product.imageUrl || 'https://via.placeholder.com/150' }} style={styles.image} />
+            <Text style={styles.productName}>{product.name}</Text>
+            <Text style={styles.price}>
+              Precio: {product.price.currency} {product.price.value.current}
+            </Text>
+            {product.price.value.original && (
+              <Text style={styles.originalPrice}>Precio Original: {product.price.value.original}</Text>
+            )}
+            <Text style={styles.brand}>Brand: {product.brand}</Text>
+            <Text style={styles.link} onPress={() => Linking.openURL(product.link)}>
+              Ir al producto
+            </Text>
           </View>
-        )}
-      />
+        ))}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' },
-  imagePicker: { borderWidth: 1, borderColor: '#ccc', padding: 20, alignItems: 'center', marginBottom: 20 },
-  selectedImage: { width: 200, height: 200, resizeMode: 'cover' },
-  resultItem: { borderBottomWidth: 1, borderBottomColor: '#eee', padding: 10 },
-  productImage: { width: 80, height: 80, marginBottom: 5 }
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  scrollView: { marginTop: 20, width: '100%' },
+  result: { padding: 15, marginBottom: 20, borderWidth: 1, borderRadius: 8, borderColor: '#ccc' },
+  image: { width: '100%', height: 200, borderRadius: 8 },
+  productName: { fontSize: 18, fontWeight: 'bold', marginTop: 10 },
+  price: { fontSize: 16, color: 'green', marginTop: 5 },
+  originalPrice: { fontSize: 14, textDecorationLine: 'line-through', color: 'red' },
+  brand: { fontSize: 14, color: '#555', marginTop: 5 },
+  link: { color: 'blue', marginTop: 5, textDecorationLine: 'underline' },
+  error: { color: 'red', marginTop: 10, fontWeight: 'bold' },
 });

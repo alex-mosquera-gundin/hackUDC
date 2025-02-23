@@ -1,10 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * This script is used to reset the project to a blank state.
- * It deletes or moves the /app, /components, /hooks, /scripts, and /constants directories to /app-example based on user input and creates a new /app directory with an index.tsx and _layout.tsx file.
- * You can remove the `reset-project` script from package.json and safely delete this file after running it.
- */
 
 const fs = require("fs");
 const path = require("path");
@@ -48,12 +43,10 @@ const rl = readline.createInterface({
 const moveDirectories = async (userInput) => {
   try {
     if (userInput === "y") {
-      // Create the app-example directory
       await fs.promises.mkdir(exampleDirPath, { recursive: true });
       console.log(`📁 /${exampleDir} directory created.`);
     }
 
-    // Move old directories to new app-example directory or delete them
     for (const dir of oldDirs) {
       const oldDirPath = path.join(root, dir);
       if (fs.existsSync(oldDirPath)) {
@@ -99,13 +92,13 @@ const moveDirectories = async (userInput) => {
 };
 
 rl.question(
-  "Do you want to move existing files to /app-example instead of deleting them? (Y/n): ",
+  " ¿Quieres mover los archivos existentes a /app-ejemplo en lugar de eliminarlos? (Y/n): ",
   (answer) => {
     const userInput = answer.trim().toLowerCase() || "y";
     if (userInput === "y" || userInput === "n") {
       moveDirectories(userInput).finally(() => rl.close());
     } else {
-      console.log("❌ Invalid input. Please enter 'Y' or 'N'.");
+      console.log("❌ Entrada no válida. Por favor, introduzca 'Y' o 'N'.");
       rl.close();
     }
   }

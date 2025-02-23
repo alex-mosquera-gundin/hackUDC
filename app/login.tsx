@@ -9,9 +9,9 @@ export default function LoginScreen() {
 
   const handleLogin = () => {
     if (firstName === '' || lastName === '') {
-      Alert.alert('Errore', 'Inserisci nome e cognome');
+      Alert.alert('Errore', 'Introduce tu nombre y apellidos');
     } else {
-      Alert.alert('Login effettuato', `Benvenuto, ${firstName} ${lastName}`);
+      Alert.alert('Ha iniciado sesión', `Bienvenido, ${firstName} ${lastName}`);
       router.push(`/welcome?firstName=${firstName}&lastName=${lastName}`);
     }
   };

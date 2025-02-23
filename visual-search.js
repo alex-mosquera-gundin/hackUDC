@@ -8,10 +8,10 @@ export default function VisualSearchScreen() {
 
   const handleSearch = async () => {
     try {
-      const response = await getProductDetails('12345'); // Sostituisci con un ID reale
+      const response = await getProductDetails('12345');
       setProduct(response);
     } catch (err) {
-      setError('Errore durante la ricerca');
+      setError('Error durante la búsqueda');
     }
   };
 
@@ -19,7 +19,7 @@ export default function VisualSearchScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Visual Search</Text>
 
-      <Button title="Cerca Prodotto" onPress={handleSearch} />
+      <Button title="Buscar producto" onPress={handleSearch} />
 
       {product && (
         <View style={styles.result}>
@@ -36,7 +36,7 @@ export default function VisualSearchScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 30 },
   result: { marginTop: 20, alignItems: 'center' },
   image: { width: 150, height: 150, marginBottom: 10 },
   error: { color: 'red', marginTop: 10 },

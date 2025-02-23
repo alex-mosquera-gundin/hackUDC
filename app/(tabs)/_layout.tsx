@@ -18,39 +18,6 @@ export default function TabLayout() {
           ),
         }}
       />
-
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explorar',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search-outline" size={size} color={color} />
-          ),
-          tabBarStyle: { height: 60 },
-        }}
-      />
-
-      <Tabs.Screen
-        name="recommendation"
-        options={{
-          title: 'Explorar',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search-outline" size={size} color={color} />
-          ),
-          tabBarStyle: { height: 60 },
-        }}
-      />
-
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Perfil',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
-          ),
-          tabBarStyle: { height: 60 },
-        }}
-      />
     </Tabs>
   );
 }
